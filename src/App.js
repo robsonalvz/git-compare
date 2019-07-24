@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import api from './services/api'
+import styled from 'styled-components'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const Title = styled.li`
+    color:blue;
+`
+export default class src extends Component {
+    state = {
+        repo: []
+    }
+    async componentDidMount(){
+        try{
+            const { data } = await api.get('repos/angular/angular')
+            console.log(data)
+            this.setState({
+                repo : [...this.state.repo, data]
+            })
+        }catch(err){
+            console.log(err.status)
+        }
+    }
+
+  render() {
+    return (
+        <div>
+            {this.state.repo.map(data =>(
+                <div className='repositories'>
+                  <Title>  { data.name } / {data.forks}</Title>
+                </div>
+            ))}
+        </div>
+    );
+  }
 }
-
-export default App;
